@@ -1,0 +1,5 @@
+{"context":{"project_dir":"./", 
+            "test_dir":"{{project_dir}}/../test",
+           "controller_name":""},
+ "description": "creates a controller and corresponding test file"
+}
