@@ -30,5 +30,8 @@ setup(name="pyles",
       # -*- Entry points: -*-
       [console_scripts]
       pyles = pyles.scripts.command:main
+
+      [pyles_command]
+      create_virtualenv = pyles.scripts.handlers:CreateVirtualEnv
       """,
       )
