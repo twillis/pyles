@@ -33,5 +33,6 @@ setup(name="pyles",
 
       [pyles_command]
       create_virtualenv = pyles.scripts.handlers:CreateVirtualEnv
+      create_buildout = pyles.scripts.handlers:CreateBuildoutSkeleton
       """,
       )

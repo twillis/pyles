@@ -78,7 +78,8 @@ def render(src, dest, context):
     assert not os.path.exists(dest), "%s exists." % dest
     context = {k: Template(v).render(context) for k, v in context.items()}
     dest_dir = os.path.dirname(dest)
-    os.makedirs(dest_dir)
+    if not (os.path.exists(dest_dir) and os.path.isdir(dest_dir)):
+        os.makedirs(dest_dir)
     if not is_text_file(src):
         copyfile(src, dest)
     else:
