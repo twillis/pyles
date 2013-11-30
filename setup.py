@@ -22,6 +22,9 @@ setup(name="pyles",
       zip_safe=False,
       install_requires=[
           # -*- Extra requirements: -*-
+          "jinja2",
+          "colander",
+          "setuptools>=1.0"
       ],
       entry_points="""
       # -*- Entry points: -*-
