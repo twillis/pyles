@@ -43,13 +43,14 @@ def assert_path_contained_in(base, path):
     path = os.path.abspath(path)
     assert not os.path.relpath(path, base).startswith(".."), "%s not contained in %s" % (path, base)
 
-def resolve_destination(src, templ_base=".", dest_base=".", context=None):
+
+def compute_destination_for_source(src, templ_base=".", dest_base=".", context=None):
     """
-    given params return destination file for src file
+    given params return destination file path for src file path
     handle templated paths based on context
     """
     context = context or {}
-    context = {k:Template(v).render(context) for k, v in context.items()}
+    context = {k: Template(v).render(context) for k, v in context.items()}
     templ_base = os.path.abspath(templ_base)
     dest_base = os.path.abspath(dest_base)
     src = os.path.abspath(os.path.join(templ_base, src))
@@ -62,7 +63,7 @@ def resolve_destination(src, templ_base=".", dest_base=".", context=None):
                         src_rel)).render({k: _c(v) for k, v in context.items()}))
 
 
-def enum_files(base_dir, predicate=None):
+def iter_files(base_dir, predicate=None):
     """
     yield files with abspath where predicate or all
     """
@@ -73,6 +74,12 @@ def enum_files(base_dir, predicate=None):
 
 
 def render(src, dest, context):
+    """given src path and dest path either copy the file if it is binary
+    or handle as a template otherwise
+
+    raise error if dest already exists
+
+    """
     src = os.path.abspath(src)
     dest = os.path.abspath(dest)
     assert not os.path.exists(dest), "%s exists." % dest
@@ -86,3 +93,16 @@ def render(src, dest, context):
         with open(src) as src_f:
             with open(dest, "w") as dest_f:
                 dest_f.write(Template(src_f.read()).render(context))
+
+
+def render_template_dir(src_dir, dest_dir, context=None):
+    """ given src dir render templates to dest_dir applying context to the
+    path as well as the body of the files along the way
+
+    """
+    context = context or {}
+    for f in iter_files(src_dir):
+        render(f, compute_destination_for_source(f,
+                                      templ_base=src_dir,
+                                      dest_base=dest_dir,
+                                      context=context), context)

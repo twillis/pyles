@@ -71,12 +71,7 @@ class CreateBuildoutSkeleton(object):
         v_env_dest = os.path.join(destination, ".env")
         v.execute(destination=v_env_dest,
                   interpreter=interpreter)
-        for f in template.enum_files(self.TEMPLATE_PATH):
-            template.render(f, template.resolve_destination(f,
-                                                            templ_base=self.TEMPLATE_PATH,
-                                                            dest_base=destination,
-                                                            context={}),
-                            {})
+        template.render_template_dir(self.TEMPLATE_PATH, destination, {})
         bootstrap = "%s %s" % (os.path.join(v_env_dest, "bin", "python"),
                                os.path.join(destination, "bootstrap.py"))
         buildout = "%s -c %s" % (os.path.join(destination, "bin", "buildout"),

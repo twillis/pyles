@@ -23,7 +23,7 @@ class TestPathResolution(unittest.TestCase):
     def testPathSrcDestNoTemplate(self):
         src = os.path.abspath("src/test_model.py")
         dest = os.path.abspath("dest/test_model.py")
-        self.assertEquals(template.resolve_destination(src,
+        self.assertEquals(template.compute_destination_for_source(src,
                                                        templ_base="./src",
                                                        dest_base="./dest"),
                           dest)
@@ -31,7 +31,7 @@ class TestPathResolution(unittest.TestCase):
     def testPathSrcDestWithTemplate(self):
         src = os.path.abspath("src/{{test_dir}}/test_model.py")
         dest = os.path.abspath("dest/test/test_model.py")
-        self.assertEquals(template.resolve_destination(src,
+        self.assertEquals(template.compute_destination_for_source(src,
                                                        templ_base="./src",
                                                        dest_base="./dest",
                                                        context={"test_dir":
@@ -44,8 +44,8 @@ class TestEnumDir(unittest.TestCase):
         ctx = {"project_dir": "./mybanginproject",
                "test_dir": "{{project_dir}}/test",
                "controller_name": "Profile"}
-        for f in template.enum_files(os.path.join(__here__, "data/create_controller"), predicate=template.NOT_CONTEXT):
-            dest = template.resolve_destination(f, 
+        for f in template.iter_files(os.path.join(__here__, "data/create_controller"), predicate=template.NOT_CONTEXT):
+            dest = template.compute_destination_for_source(f, 
                                                 templ_base=os.path.join(__here__, "data/create_controller"), 
                                                 dest_base=os.path.join(__here__), 
                                                 context=ctx)
